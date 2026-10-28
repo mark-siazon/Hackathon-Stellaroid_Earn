@@ -6,16 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
+    "lint": "npm run test:lint-deps && eslint . --ignore-pattern .next --ignore-pattern next-env.d.ts",
+    "test:lint-deps": "node --test scripts/next-lint-glob.test.mjs",
     "test:unit": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/**/*.test.ts src/app/**/*.test.ts",
     "test:e2e": "playwright test",
+    "test:wallets": "playwright test --config playwright.wallets.config.ts",
     "gen:pwa": "node scripts/generate-pwa-icons.mjs && node scripts/generate-splash.mjs"
   },
   "dependencies": {
     "@albedo-link/intent": "^0.13.0",
     "@base-ui/react": "^1.7.0",
-    "@creit.tech/stellar-wallets-kit": "^2.6.0",
-    "@modelcontextprotocol/server": "^2.0.0",
+    "@creit.tech/xbull-wallet-connect": "0.4.0",
+    "@lobstrco/signer-extension-api": "2.0.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "@stellar/freighter-api": "^6.0.1",
     "@stellar/stellar-sdk": "^17.0.0",
     "@tailwindcss/postcss": "^4.3.3",
@@ -26,7 +29,7 @@
     "framer-motion": "^13.2.0",
     "lucide-react": "^1.37.0",
     "mcp-handler": "^2.1.1",
-    "next": "^16.4.2",
+    "next": "16.4.3",
     "qrcode": "^1.5.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -34,23 +37,26 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.2.2",
     "tw-animate-css": "^1.4.0",
-    "zod": "^4.5.4"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
+    "fast-glob": "file:tools/next-lint-glob",
     "@eslint/eslintrc": "^3.3.7",
-    "@modelcontextprotocol/client": "^2.0.0",
+    "@modelcontextprotocol/client": "^2.3.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.4.0",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.4",
-    "shadcn": "^4.20.1",
+    "eslint-config-next": "16.3.8",
     "sharp": "^0.35.4",
     "typescript": "^6.0.3"
   },
   "overrides": {
+    "@next/eslint-plugin-next@16.3.8": {
+      "fast-glob": "$fast-glob"
+    },
     "axios": "^1.18.1",
     "postcss": "8.5.23",
     "protobufjs": "^7.6.3",

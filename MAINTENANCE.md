@@ -73,6 +73,32 @@ The Vercel fallback alias may still exist for recovery checks, but it should not
 
 ## Held Dependency Majors
 
+### Temporary Next lint glob adapter
+
+The pinned `@next/eslint-plugin-next@16.3.8` uses the private adapter in
+[`frontend/tools/next-lint-glob`](frontend/tools/next-lint-glob/README.md) for its
+directory-root lookup. This removes its unpatched Braces dependency chain.
+The override targets that exact plugin version; framework versions and wallet
+cryptography are unchanged. `npm run lint` first runs seven compatibility and
+input-limit tests against the actual installed plugin. Those tests also detect
+an upgrade that bypasses the reviewed adapter.
+
+When upgrading Next or its lint plugin, review the dependency use and run
+`npm run test:lint-deps`, `npm run lint`, and the normal frontend checks.
+Remove this adapter once upstream drops the vulnerable chain. Do not replace
+it with a raw `tinyglobby` alias: literal-directory and recursive-root behavior
+differs. Supported patterns and explicit restrictions are in the adapter README.
+
+The subsequent 2026-10-17 wallet remediation removes the broad wallet kit and
+its unused HOT/NEAR/Elliptic chain. Full and production npm audits report zero
+findings. Six direct wallet integrations retain existing session keys and
+wallet coverage, with a local chooser and signed-envelope validation. See the
+[integration notes](docs/reference/extension-wallets.md) for API, license,
+verification, and manual-extension limitations. Keep `npm run test:wallets`
+in the existing Frontend CI workflow; no extra workflow is required.
+
+### Ecosystem version holds
+
 Two frontend dependencies are deliberately held back because the surrounding ecosystem cannot support them yet. Both holds are encoded as version-scoped `ignore` entries on the `/frontend` npm entry in [`.github/dependabot.yml`](.github/dependabot.yml), so Dependabot stops re-proposing them. Without the holds the grouped PR fails CI, which is what happened in #108 (majors) and #119 (minor/patch).
 
 | Package | Held at | Blocked version | Blocker |
